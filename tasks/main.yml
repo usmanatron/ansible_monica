@@ -1,6 +1,53 @@
 ---
-# tasks file for ansible_role_template
-- name: "Hello World!"
-  ansible.builtin.debug:
-    msg: Hello World!
-    
+# Setup
+- name: Add {{ app_name }} user
+  ansible.builtin.user:
+    name: "{{ app_name }}"
+    state: present
+
+- name: Add user to docker group
+  ansible.builtin.user:
+    name: "{{ app_name }}"
+    groups: docker
+    append: true
+
+- name: Add app directories
+  ansible.builtin.file:
+    path: "{{ app_folder }}/{{ item }}"
+    mode: 0644
+    owner: "{{ app_name }}"
+    state: directory
+  loop:
+  - "database"
+  - "data"
+
+# Application
+- name: Add docker-compose file
+  ansible.builtin.template:
+    src: docker-compose.yml.j2
+    dest: "{{ app_folder }}/docker-compose.yml"
+    mode: 0644
+
+- name: Start Docker Compose Services
+  community.docker.docker_compose:
+    project_src: "{{ app_folder }}"
+    state: present
+
+
+
+
+
+# Backups
+- name: Add MySQL backups
+  ansible.builtin.include_role:
+    name: backup_mysql
+  vars:
+    app_name: "{{ app_name }}"
+
+- name: Add directory backup
+  ansible.builtin.include_role:
+    name: backup_directory
+  vars:
+    app_name: "{{ app_name }}"
+    name: "data"
+    directory: "{{ app_folder }}/data"

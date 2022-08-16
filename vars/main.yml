@@ -1,2 +1,3 @@
 ---
-# vars file for ansible_role_template
+monica_version: "3.7.0"
+monica_database_password: ""

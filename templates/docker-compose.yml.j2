@@ -1,0 +1,28 @@
+# {{ ansible_managed }}
+version: "3.7"
+
+services:
+  app:
+    image: monica:{{ app_monica_version }}-apache
+    depends_on:
+      - db
+    ports:
+      - 8085:80
+    restart: always
+    environment:
+      - DB_HOST=db
+      - DB_USERNAME={{ app_monica_database_username }}
+      - DB_PASSWORD={{ app_monica_database_password }}
+    volumes:
+      - {{ app_folder }}/data:/var/www/html/storage
+  db:
+    image: mariadb:10.8.3
+    ports:
+      - 3306:3306
+    restart: always
+    environment:
+      - MYSQL_DATABASE={{ app_name }}
+      - MYSQL_USER={{ app_monica_database_username }}
+      - MYSQL_PASSWORD={{ app_monica_database_password }}
+    volumes:
+      - {{ app_folder }}/database:/var/lib/mysql
