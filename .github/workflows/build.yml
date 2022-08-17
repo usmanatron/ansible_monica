@@ -21,7 +21,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install ansible-core molecule ansible-lint
+        pip install ansible-core molecule
     - name: Run ansible-lint
       uses: ansible-community/ansible-lint-action@v6.3.0
     - name: Run molecule
