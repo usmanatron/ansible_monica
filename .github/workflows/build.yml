@@ -24,12 +24,11 @@ jobs:
         pip install ansible-core molecule ansible-lint
     - name: Test role syntax
       run: |
-        printf "[defaults]\nroles_path=${GITHUB_WORKSPACE}" >ansible.cfg
+        printf "[defaults]\nroles_path=$GITHUB_WORKSPACE" >ansible.cfg
         cat ansible.cfg
         ansible-playbook tests/test.yml -i tests/inventory --syntax-check
     - name: Run ansible-lint
-      run: |
-        ansible-lint
+      uses: ansible-community/ansible-lint-action@main
     - name: Run molecule
       run: |
         molecule check
