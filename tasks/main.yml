@@ -33,17 +33,19 @@
     project_src: "{{ app_folder }}"
     state: present
 
-# # Backups
-# - name: Add MySQL backups
-#   ansible.builtin.include_role:
-#     name: backup_mysql
-#   vars:
-#     app_name: "{{ app_name }}"
+# Backups
+- name: Add directory backup
+  ansible.builtin.include_role:
+    name: usmanatron.backup_directory
+  vars:
+    parent_directory: "{{ app_folder }}"
+    directory: data
 
-# - name: Add directory backup
-#   ansible.builtin.include_role:
-#     name: backup_directory
-#   vars:
-#     app_name: "{{ app_name }}"
-#     name: "data"
-#     directory: "{{ app_folder }}/data"
+- name: Add database backup
+  ansible.builtin.include_role:
+    name: usmanatron.backup_mariadb
+  vars:
+    parent_directory: "{{ app_folder }}"
+    database_name: "{{ app_name }}"
+    database_username: "{{ monica_database_username }}"
+    database_password: "{{ monica_database_password }}"
