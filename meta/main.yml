@@ -5,7 +5,6 @@ galaxy_info:
   description: Run Monica CRM via Docker
   license: MIT
   min_ansible_version: "2.10"
-  
 
   platforms:
   - name: Debian
